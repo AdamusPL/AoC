@@ -139,62 +139,89 @@ void Days::day2(){
     file.open("data2.txt",ios::in);
     string line;
     string number;
+    string numberOfCubes;
     int red = 12;
     int green = 13;
     int blue = 14;
-    bool skip;
-    int possible = 0;
-//    vector<string> dictionary;
-//    dictionary.push_back("red");
-//    dictionary.push_back("green");
-//    dictionary.push_back("blue");
+    int minR = 0, minG = 0, minB = 0;
+    int power=0;
+    bool skip = false;
+    bool took = false;
+    int sumOfIDs = 0;
 
     for (int numberOfGame = 1; numberOfGame <= 100; ++numberOfGame) {
+
         skip = false;
-        getline(file, line, ':'); //Game nr:
+        getline(file,line);
+        line+=',';
+        number="";
+        minR = 0;
+        minG = 0;
+        minB = 0;
 
-        do {
+        int i=0;
+        while(line[i]!=':'){
+            if(line[i] >= '0' && line[i] <= '9'){
+                number+=line[i];
+            }
+            i++;
+        }
 
-            getline(file, line, ';'); //1 taking hand from bag
+        while(i!=line.size()-1) {
+            if (line[i] >= '0' && line[i] <= '9') {
+                numberOfCubes += line[i];
+            }
+            else if (line[i] == 'r') {
+                if (stoi(numberOfCubes) > red) {
+                    skip = true;
+                }
+                took = true;
 
-            for (int i = 0; i < line.size(); i++) {
-                if(line[i]>=49 && line[i]<=57){
-                    number+=line[i];
+                if(minR < stoi(numberOfCubes)){
+                    minR = stoi(numberOfCubes);
                 }
 
-                if(line[i] == 'r'){
-                    if(stoi(number) > red){
-                        skip = true;
-                        continue;
-                    }
-                    number="";
-                    while(line[i]!=',') i++;
+            } else if (line[i] == 'g') {
+                if (stoi(numberOfCubes) > green) {
+                    skip = true;
+                }
+                took = true;
+
+                if(minG < stoi(numberOfCubes)){
+                    minG = stoi(numberOfCubes);
                 }
 
-                else if(line[i] == 'g'){
-                    if(stoi(number) > green){
-                        skip = true;
-                        continue;
-                    }
-                    number="";
-                    while(line[i]!=',') i++;
+            } else if (line[i] == 'b') {
+                if (stoi(numberOfCubes) > blue) {
+                    skip = true;
                 }
-
-                else if(line[i] == 'b'){ //b
-                    if(stoi(number) > blue){
-                        skip = true;
-                        continue;
-                    }
-                    number="";
-                    while(line[i]!=',') i++;
+                took = true;
+                if(minB < stoi(numberOfCubes)){
+                    minB = stoi(numberOfCubes);
                 }
             }
 
-        } while (line[line.size()-1] != '\n');
+            i++;
 
-        if(!skip) possible++;
+            if(took){
+                while(line[i]!=',' && line[i]!=';'){
+                    i++;
+                }
+                numberOfCubes = "";
+            }
+
+            took = false;
+
+        }
+
+        if(!skip) {
+            sumOfIDs += stoi(number);
+        }
+
+        power += minR*minG*minB;
 
     }
 
-    std::cout<<possible<<std::endl;
+    std::cout << sumOfIDs << std::endl;
+    std::cout << power << std::endl;
 }
