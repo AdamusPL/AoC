@@ -2,6 +2,7 @@
 // Created by adamc on 09/12/2023.
 //
 
+#include <cmath>
 #include "Days.h"
 
 void Days::day1_part1() {
@@ -224,4 +225,175 @@ void Days::day2(){
 
     std::cout << sumOfIDs << std::endl;
     std::cout << power << std::endl;
+}
+
+void Days::day3(){
+    fstream file;
+    string line;
+    file.open("data3.txt",ios::in);
+
+    int rows = 0;
+
+    //count rows and columns in txt file
+    while(!file.eof()){
+        getline(file, line);
+        rows++;
+    }
+
+    int columns = line.size();
+
+    file.close();
+    file.open("data3.txt",ios::in);
+
+    //read all chars from txt file to matrix
+    char matrix[rows][columns];
+    int indexOfFirstDigit;
+    int indexOfLastDigit;
+
+    for(int i = 0; i < rows; i++){
+        for (int j = 0; j < columns; ++j) {
+            file >> matrix[i][j];
+        }
+    }
+
+    string number;
+    bool detected=false;
+    bool count = true;
+    int sum = 0;
+
+    for(int i = 0; i < rows; i++){
+        for (int j = 0; j < columns; ++j) {
+
+            count = true;
+            detected = false;
+            number = "";
+
+            while(matrix[i][j] >= '0' && matrix[i][j] <= '9'){
+                if(!detected){
+                    indexOfFirstDigit = j;
+                    detected = true;
+                }
+                number+=matrix[i][j];
+                j++;
+                indexOfLastDigit = j;
+            }
+
+            if(detected){
+                if(matrix[i][indexOfFirstDigit-1] != '.' || matrix[i-1][indexOfFirstDigit-1] != '.' ||
+                matrix[i+1][indexOfFirstDigit-1] != '.'){
+                    count = false;
+                }
+
+                while(indexOfFirstDigit!=indexOfLastDigit+1){
+
+                    if(matrix[i-1][indexOfFirstDigit] != '.' || matrix[i+1][indexOfFirstDigit] != '.') {
+                        count = false;
+                    }
+
+                    indexOfFirstDigit++;
+                }
+
+                if(matrix[i][indexOfFirstDigit+1] != '.' || matrix[i+1][indexOfFirstDigit+1] != '.' ||
+                   matrix[i-1][indexOfFirstDigit+1] != '.'){
+                    count = false;
+                }
+
+                if(count) {
+                    sum += stoi(number);
+                    number = "";
+                }
+
+            }
+
+        }
+    }
+
+    std::cout << sum << std::endl;
+    file.close();
+
+
+}
+
+void Days::day4(){
+    fstream file;
+    string data;
+    int sumOfPoints = 0;
+    int matches = 0;
+    int sumOfScratchCards = 0;
+    int matchesPrev = 0;
+    file.open("data4.txt",ios::in);
+    vector<int> winningNumbers;
+    vector<int> myNumbers;
+
+    vector<pair<int, int>> numberOfCopies; //<trafione, ilosc>
+
+    for(int i=0; i<223; i++){
+        numberOfCopies.emplace_back(0,1);
+    }
+
+    file >> data;
+
+    while(!file.eof()) {
+
+        //taking out garbage
+        file >> data;
+        string number;
+        for(int i=0; i<data.size(); i++){
+            if(data[i] >= '0' && data[i] <= '9') number+=data[i];
+        }
+//        std::cout << data << std::endl;
+        matches = 0;
+
+
+        while(!file.eof()){
+            file >> data;
+            if(data.find('|') != std::string::npos){
+                break;
+            }
+            winningNumbers.push_back(stoi(data));
+        }
+
+        while(!file.eof()){
+            file >> data;
+            if(data.find("Card") != std::string::npos){
+                break;
+            }
+            myNumbers.push_back(stoi(data));
+        }
+
+        for(int i=0; i<myNumbers.size(); i++){
+            for (int j = 0; j < winningNumbers.size(); ++j) {
+                if(myNumbers[i] == winningNumbers[j]){
+                    matches++;
+                    break;
+                }
+            }
+        }
+
+        int prevMatches = numberOfCopies[stoi(number)-1].second;
+
+        for(int i=stoi(number); i<matches+stoi(number); i++){
+            for(int j=0; j<prevMatches; j++) {
+                numberOfCopies[i].second++;
+            }
+        }
+
+        if(matches>0) {
+            sumOfPoints += pow(2, matches - 1);
+        }
+
+        myNumbers.clear();
+        winningNumbers.clear();
+        number = "";
+    }
+
+    for(int i=0; i<numberOfCopies.size(); i++){
+        cout<<numberOfCopies[i].second<<endl;
+        sumOfScratchCards+=numberOfCopies[i].second;
+    }
+
+    cout << sumOfPoints << endl;
+    cout << sumOfScratchCards << endl;
+
+    file.close();
 }

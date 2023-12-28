@@ -14,6 +14,8 @@ public:
     void day1_part1();
     void day1_part2();
     void day2();
+    void day3();
+    void day4();
 };
 
 
