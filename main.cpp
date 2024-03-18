@@ -12,6 +12,6 @@ int main() {
     day3.part2();
     Day8 day8;
 //    day8.part1();
-    day8.part2();
+//    day8.part2();
     return 0;
 }
