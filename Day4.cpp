@@ -11,7 +11,7 @@ void Day4::launch() {
     int matches = 0;
     int sumOfScratchCards = 0;
     int matchesPrev = 0;
-    file.open("data4.txt",ios::in);
+    file.open("cmake-build-debug/data4.txt",ios::in);
     vector<int> winningNumbers;
     vector<int> myNumbers;
 

@@ -7,7 +7,7 @@
 void Day6::part1() {
 
     fstream file;
-    file.open("data6.txt",ios::in);
+    file.open("cmake-build-debug/data6.txt",ios::in);
 
     string data;
     file >> data;
@@ -48,7 +48,7 @@ void Day6::part1() {
 void Day6::part2(){
 
     fstream file;
-    file.open("data6.txt",ios::in);
+    file.open("cmake-build-debug/data6.txt",ios::in);
 
     string data;
     file >> data;

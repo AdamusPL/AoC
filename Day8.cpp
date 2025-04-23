@@ -142,7 +142,7 @@ int Day8::GCD(int a, int b){
 
 void Day8::readData(){
     fstream file;
-    file.open("data8.txt",ios::in);
+    file.open("cmake-build-debug/data8.txt",ios::in);
 
     file >> directions;
 

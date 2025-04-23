@@ -292,7 +292,7 @@ void Day3::part2() {
 char **Day3::readData() {
     fstream file;
     string line;
-    file.open("data3.txt", ios::in);
+    file.open("cmake-build-debug/data3.txt", ios::in);
 
     rows = 0;
 
@@ -305,7 +305,7 @@ char **Day3::readData() {
     columns = line.size();
 
     file.close();
-    file.open("data3.txt", ios::in);
+    file.open("cmake-build-debug/data3.txt", ios::in);
 
     //read all chars from txt file to matrix
     matrix = new char *[rows];

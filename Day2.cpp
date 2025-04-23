@@ -6,7 +6,7 @@
 
 void Day2::launch() {
     fstream file;
-    file.open("data2.txt",ios::in);
+    file.open("cmake-build-debug/data2.txt",ios::in);
     string line;
     string number;
     string numberOfCubes;

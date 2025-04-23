@@ -56,7 +56,7 @@ bool compare(const pair<pair<string, int>, pair<char, int>>& a, const pair<pair<
 void Day7::part1() {
 
     fstream file;
-    file.open("data7.txt", ios::in);
+    file.open("cmake-build-debug/data7.txt", ios::in);
 
     //hand+value
     vector<pair<string, int>> cards;

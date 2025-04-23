@@ -6,7 +6,7 @@
 
 void Day1::part1() {
     fstream file;
-    file.open("data1.txt",ios::in);
+    file.open("cmake-build-debug/data1.txt",ios::in);
 
     string data;
     string solution;
@@ -56,7 +56,7 @@ void Day1::part2() {
     converter.emplace_back("nine", '9');
 
     fstream file;
-    file.open("data1.txt",ios::in);
+    file.open("cmake-build-debug/data1.txt",ios::in);
 
     string data;
     string solution;
