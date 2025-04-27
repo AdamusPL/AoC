@@ -19,13 +19,9 @@ bool compare(const char& a, const char& b) {
     return kindsOfCards.find(a) > kindsOfCards.find(b);
 }
 
-void Day7::part1() {
-
+void Day7::readData() {
     fstream file;
     file.open("cmake-build-debug/data7.txt", ios::in);
-
-    //hand+value
-    vector<pair<string, int>> cards;
 
     string hand;
     int value;
@@ -37,6 +33,10 @@ void Day7::part1() {
     }
 
     file.close();
+}
+
+void Day7::part1() {
+    readData();
 
     //pair: (hand+value) +
     vector<pair<pair<string, int>, int>> cardsWithParameters;
@@ -45,14 +45,6 @@ void Day7::part1() {
         kindChecker(handValue.first, cardsWithParameters, handValue);
     }
 
-    //sort by kind
-    // sort(cardsWithParameters.begin(), cardsWithParameters.end(), [](const auto &a, const auto &b) {
-    //     return a.second < b.second;
-    // });
-
-    // //sort by number of repetitive cards and then most powerful cards
-    // sort(cardsWithParameters.begin(), cardsWithParameters.end(), compare);
-    //
     //calculate gains
     int sum = 0;
     int i = 1;
@@ -64,6 +56,12 @@ void Day7::part1() {
     }
 
     cout << "=" << sum << endl;
+
+}
+
+void Day7::part2() {
+    readData();
+
 
 }
 
@@ -160,27 +158,4 @@ void Day7::kindChecker(string hand, vector<pair<pair<string, int>, int>>& cardsW
 
     pair<pair<string, int>, int> card = pair(handValue, kind);
     cardsWithParameters.insert(cardsWithParameters.begin() + insertionIndex, card);
-}
-
-char Day7::checkWhichCardIsWorse(char x, char y) {
-    int rankX, rankY = 0;
-    for (int i = 0; i < kindsOfCards.size(); i++) {
-        if (x == kindsOfCards[i]) {
-            rankX = i;
-            break;
-        }
-    }
-
-    for (int i = 0; i < kindsOfCards.size(); i++) {
-        if (y == kindsOfCards[i]) {
-            rankY = i;
-            break;
-        }
-    }
-
-    if (rankX < rankY) {
-        return x;
-    } else {
-        return y;
-    }
 }

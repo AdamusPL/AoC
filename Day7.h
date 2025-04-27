@@ -13,9 +13,13 @@ class Day7 {
     void kindChecker(string, vector<pair<pair<string, int>, int>>&, pair<string, int>);
     char checkWhichCardIsWorse(char, char);
     string kindsOfCards;
+    //hand+value
+    vector<pair<string, int>> cards;
+    void readData();
 public:
     Day7();
     void part1();
+    void part2();
 };
 
 
