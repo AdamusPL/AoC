@@ -235,7 +235,8 @@ void Day5::solve_part2() {
     vector<thread> threads;
     long long globalMin = LONG_LONG_MAX;
 
-    for (const auto &seedRange: neededPart2) {
+    threads.reserve(neededPart2.size());
+for (const auto &seedRange: neededPart2) {
         threads.emplace_back([this, seedRange, &globalMin]() {
             this->processSeeds(seedRange, this->sourceAndDestination, globalMin);
         });

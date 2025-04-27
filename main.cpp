@@ -9,17 +9,9 @@
 using namespace std;
 
 int main() {
-    // Day4 day4;
-    // day4.launch();
 
-    Day5 day5;
-    day5.part2();
+    Day7 day7;
+    day7.part1();
 
-    // Day7 day7;
-    // day7.part1();
-
-//    Day8 day8;
-//    day8.part1();
-//    day8.part2();
     return 0;
 }

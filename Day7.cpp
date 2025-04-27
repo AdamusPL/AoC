@@ -12,45 +12,11 @@ Day7::Day7() {
     kindsOfCards = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
 }
 
-bool compare(const pair<pair<string, int>, pair<char, int>>& a, const pair<pair<string, int>, pair<char, int>>& b) {
-    // If counts are equal, compare based on the value of the card
-    // You can create a map or array to assign ranks to cards
+//check which card is better
+bool compare(const char& a, const char& b) {
     string kindsOfCards = "AKQJT98765432";
 
-    if(a.second.second != b.second.second) {
-        bool cmp1;
-        bool cmp2;
-
-        cmp1 = a.second.second > b.second.second; // Sort by count, highest to lowest
-        cmp2 = kindsOfCards.find(a.second.first) > kindsOfCards.find(b.second.first);
-
-        if ((cmp1 && cmp2)) {
-            return true;
-        }
-        if (cmp1 && !cmp2) {
-            return false;
-        }
-        if (!cmp1 && cmp2) {
-            return false;
-        }
-        if (!cmp1 && !cmp2) {
-            return true;
-        }
-    }
-
-    else{
-        bool cmp2;
-
-        cmp2 = kindsOfCards.find(a.second.first) > kindsOfCards.find(b.second.first);
-
-        if(cmp2){
-            return true;
-        }
-
-        else{
-            return false;
-        }
-    }
+    return kindsOfCards.find(a) > kindsOfCards.find(b);
 }
 
 void Day7::part1() {
@@ -72,23 +38,21 @@ void Day7::part1() {
 
     file.close();
 
-    //card+amount (max)
-    pair<char, int> kinds;
-
-    //pair: (hand+value) + (most repetitive card, how many times it repeats)
-    vector<pair<pair<string, int>, pair<char, int>>> cardsWithParameters;
-
-    int j = 1;
+    //pair: (hand+value) +
+    vector<pair<pair<string, int>, int>> cardsWithParameters;
 
     for (auto &handValue: cards) {
-        kinds = kindChecker(handValue.first);
-        cardsWithParameters.emplace_back(handValue, kinds);
-        j++;
+        kindChecker(handValue.first, cardsWithParameters, handValue);
     }
 
-    //sort by number of repetitive cards and then most powerful cards
-    sort(cardsWithParameters.begin(), cardsWithParameters.end(), compare);
+    //sort by kind
+    // sort(cardsWithParameters.begin(), cardsWithParameters.end(), [](const auto &a, const auto &b) {
+    //     return a.second < b.second;
+    // });
 
+    // //sort by number of repetitive cards and then most powerful cards
+    // sort(cardsWithParameters.begin(), cardsWithParameters.end(), compare);
+    //
     //calculate gains
     int sum = 0;
     int i = 1;
@@ -103,7 +67,40 @@ void Day7::part1() {
 
 }
 
-pair<char, int> Day7::kindChecker(string hand) {
+int checkKind(vector<pair<char, int>> numberOfCards) {
+    //check type of hand
+    if (numberOfCards.size() == 1) {
+        //five of a kind
+        return 1;
+    }
+    if (numberOfCards.size() == 4) {
+        //one pair
+        return 6;
+    }
+    if (numberOfCards.size() == 5) {
+        //high card
+        return 7;
+    }
+    if (numberOfCards.size() == 2) {
+        if (numberOfCards[0].second == 4 || numberOfCards[1].second == 4) {
+            //four of a kind
+            return 2;
+        }
+        //full house
+        return 3;
+    }
+    if (numberOfCards.size() == 3) {
+        if (numberOfCards[0].second == 3 || numberOfCards[1].second == 3 || numberOfCards[2].second == 3) {
+            //three of a kind
+            return 4;
+        }
+        //two pairs
+        return 5;
+    }
+    return 88;
+}
+
+void Day7::kindChecker(string hand, vector<pair<pair<string, int>, int>>& cardsWithParameters, pair<string, int> handValue) {
     vector<pair<char, int>> numberOfCards;
     //count how many cards of which kind is in hand
     for (char x: hand) {
@@ -119,25 +116,53 @@ pair<char, int> Day7::kindChecker(string hand) {
         }
     }
 
-    int max = 0;
-    pair<char, int> valueMax;
+    int kind = checkKind(numberOfCards);
+    int insertionIndex = 0;
+    bool changed = false;
 
-    //check what kind of card is the most common and which is most powerful
-    for (auto &value: numberOfCards) {
-        if (value.second > max) {
-            max = value.second;
-            valueMax = value;
-        } else if (value.second == max) {
-            //if there are two cards which appear in the same amount
-            valueMax = make_pair(checkWhichCardIsBetter(valueMax.first, value.first), max);
+    //if no cards were inserted
+    if (cardsWithParameters.empty()) {
+        cardsWithParameters.emplace_back(handValue, kind);
+        return;
+    }
+
+    for (size_t i = 0; i < cardsWithParameters.size(); ++i) {
+
+        if (cardsWithParameters.size() == 10) {
+            cout << "LOL";
+        }
+
+        const auto& card = cardsWithParameters[i];
+
+        //when card with the same rank exist
+        if (card.second == kind) {
+            for (int j=0; j<5; j++) {
+                if (card.first.first[j] != hand[j]) {
+                    bool isWorse = compare(hand[j], card.first.first[j]);
+                    if (isWorse) {
+                        insertionIndex = i;
+                        changed = true;
+                    }
+                    else if (cardsWithParameters[i+1].second != kind || i == cardsWithParameters.size() - 1) {
+                        insertionIndex = i+1;
+                    }
+                    break;
+                }
+            }
+        }
+        if (changed) {
+            break;
+        }
+        if (card.second > kind) {
+            insertionIndex = i+1;
         }
     }
 
-    return valueMax;
-
+    pair<pair<string, int>, int> card = pair(handValue, kind);
+    cardsWithParameters.insert(cardsWithParameters.begin() + insertionIndex, card);
 }
 
-char Day7::checkWhichCardIsBetter(char x, char y) {
+char Day7::checkWhichCardIsWorse(char x, char y) {
     int rankX, rankY = 0;
     for (int i = 0; i < kindsOfCards.size(); i++) {
         if (x == kindsOfCards[i]) {

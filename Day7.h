@@ -10,8 +10,8 @@
 using namespace std;
 
 class Day7 {
-    pair<char, int> kindChecker(string);
-    char checkWhichCardIsBetter(char, char);
+    void kindChecker(string, vector<pair<pair<string, int>, int>>&, pair<string, int>);
+    char checkWhichCardIsWorse(char, char);
     string kindsOfCards;
 public:
     Day7();
