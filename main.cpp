@@ -6,12 +6,13 @@
 #include "Day6.h"
 #include "Day7.h"
 #include "Day8.h"
+#include "Day9.h"
 using namespace std;
 
 int main() {
 
-    Day7 day7;
-    day7.part1();
+    Day9 day9;
+    day9.part1();
 
     return 0;
 }
