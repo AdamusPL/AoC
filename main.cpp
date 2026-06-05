@@ -12,7 +12,7 @@ using namespace std;
 int main() {
 
     Day9 day9;
-    day9.part1();
+    day9.part2();
 
     return 0;
 }
